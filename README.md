@@ -18,3 +18,4 @@ TODO
 - move all mongo db credentials to a .env file
 - work on the json formatting
 - work on the argument parsing for the CLI
+- add Cargo.toml file for dependencies (this was initially ignored in the git commit)
