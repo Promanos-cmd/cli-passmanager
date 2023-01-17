@@ -1,32 +1,54 @@
 use bson::Document;
 use mongodb::{bson::doc, options::ClientOptions, Client};
 use chrono::{Utc,TimeZone};
-use std::io;
-use clap::Parser;
+use clap::{Parser, Subcommand, Command, Args};
 
-/// Simple program to greet a person
-#[derive(Parser, Debug)]
+
+
+
+
+#[derive(Parser,Debug)]
 #[command(author, version, about, long_about = None)]
-struct Args {
-   /// Name of the person to greet
-   #[arg(short, long)]
-   name: String,
-
-   /// Number of times to greet
-   #[arg(short, long, default_value_t = 1)]
-   count: u8,
+pub struct Variables {
+   /// Input Subcommand
+   #[clap(subcommand)]
+   pub input: Input,
 }
 
+/* If more sub commands are to be written it will be in this section */
+#[derive(Debug,Subcommand)]
+pub enum Input {
+    /// First subcommand to create the json to create a password
+    Create(AppName)
+}
    
+#[derive(Debug, Args)]
+pub struct AppName {
+    ///Users Username
+    pub username: String,
+    ///Users Password
+    pub password: String,
+    /// The name of the account Connected App
+    pub app: String,
+}
 
-/* first part of project submitting api to a database*/
+
+
+
+/* first part of project submitting api to a database
+
+This will be the data part of the project 
+
+Thinking of porting this to diesel and a postgresql database to not run the cost of mongoDB usage
+
+
+
+*/
 #[tokio::main]
     async fn main() -> mongodb::error::Result<()> { 
-        let args = Args::parse();  /* Parsing a basic function */
+        let args = Variables::parse(); 
 
-        for _ in 0..args.count {
-        println!("Hello {}!", args.name)            // Will probably replace with a match statement
-        }
+        println!("{:?}", args );
 
         
         // find().await; Call to find something in the api will probably do via app name
@@ -56,7 +78,7 @@ struct Args {
 
     async fn insert() -> mongodb::error::Result<()> {
         let client_options = ClientOptions::parse(
-            "{MongoDBURI}",
+            "MongoDBURI",
         )
         .await?;
         let client = Client::with_options(client_options)?;
@@ -75,7 +97,6 @@ struct Args {
         /* 
     async fn delete() -> mongodb::error::Result<()> {
         let client_options = ClientOptions::parse(
-            "MongoDBURI",
         )
         .await?;
         let client = Client::with_options(client_options)?;
@@ -88,7 +109,6 @@ struct Args {
             None,
         ).await?;
         println!("Deleted {} documents", delete_result.deleted_count);
-
         Ok(())
         }
         
