@@ -15,7 +15,8 @@ This will be done in rust as a learning experience to get used to the many benef
 TODO 
 
 - CLI using Clap 
-- move all mongo db credentials to a .env file
 - work on the json formatting
-- work on the argument parsing for the CLI
-- add Cargo.toml file for dependencies (this was initially ignored in the git commit)
+- take variables from a command line and include them in api calls
+
+- work out an auth method
+- write api to connect this password manager to a postgres sql database
